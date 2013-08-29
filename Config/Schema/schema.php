@@ -17,6 +17,12 @@ class PropertiesSchema extends CakeSchema {
 	public function after($event = array()) {
 		$this->UpdateSchema->rename($event, $this->renames);
 		$this->UpdateSchema->after($event);
+		
+		// wouldn't be needed in cakephp 2.4 (below 2.4 doesn't support fulltext indexes)
+		if (isset($event['create']) && $event['create'] == 'properties') {
+		    $Property = ClassRegistry::init('Property');
+	        $Property->query("ALTER TABLE `properties` ADD FULLTEXT `SEARCH_TAGS` ( `search_tags` )");
+		}
 	}
 
 	public $properties = array(
@@ -42,7 +48,7 @@ class PropertiesSchema extends CakeSchema {
 		'modifier_id' => array('type' => 'string', 'null' => true, 'default' => NULL, 'length' => 36, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'created' => array('type' => 'datetime', 'null' => false, 'default' => NULL),
 		'modified' => array('type' => 'datetime', 'null' => false, 'default' => NULL),
-		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1), 'search_tags' => array('column' => 'search_tags', 'unique' => 0)),
+		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1), 'SEARCH_TAGS' => array('column' => 'search_tags', 'unique' => 0)),
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'MyISAM')
 	);
 }
