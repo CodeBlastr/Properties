@@ -29,23 +29,23 @@
 			echo $this->Form->input('Property.description', array('type' => 'richtext', 'label' => 'Property Description')); 
 			echo $this->Form->input('Property.location');
 			echo $this->Form->input('Property.bedrooms');
-			echo $this->Form->input('Product.bathrooms');
-			echo $this->Form->input('Product.footage', array('label' => 'Square Footage'));
-			echo $this->Form->input('Product.acres');?>
+			echo $this->Form->input('Property.bathrooms');
+			echo $this->Form->input('Property.footage', array('label' => 'Square Footage'));
+			echo $this->Form->input('Property.acres');?>
 	    </fieldset>
 	</div>
 	<div class="span4 pull-right">
 	    <fieldset>
 	        <legend class="toggleClick"><?php echo __('Optional property details'); ?></legend>
 	        <?php
-	        echo $this->Form->input('Product.mls', array('label' => 'MLS Number'));
-	        echo $this->Form->input('Product.summary', array('type' => 'text', 'label' => 'Promo Text <br /><small><em>Short blurb of text to entice people to view more about this property.</em></small>'));
-			echo $this->Form->input('Product.is_public', array('default' => 1, 'label' => 'Published')); ?>
+	        echo $this->Form->input('Property.mls', array('label' => 'MLS Number'));
+	        echo $this->Form->input('Property.summary', array('type' => 'text', 'label' => 'Promo Text <br /><small><em>Short blurb of text to entice people to view more about this property.</em></small>'));
+			echo $this->Form->input('Property.is_public', array('default' => 1, 'label' => 'Published')); ?>
 	    </fieldset>
 	
 		<fieldset>
 	 		<legend class="toggleClick"><?php echo __('Property categories');?></legend>
-				<?php echo $this->Form->input('Category', array('multiple' => 'checkbox', 'label' => __('Choose categories (%s)', $this->Html->link('manage categories', array('admin' => 1, 'plugin' => 'products', 'controller' => 'products', 'action' => 'categories'))))); ?>
+				<?php echo $this->Form->input('Category', array('multiple' => 'checkbox', 'label' => __('Choose categories (%s)', $this->Html->link('manage categories', array('admin' => 1, 'plugin' => 'properties', 'controller' => 'properties', 'action' => 'categories'))))); ?>
 		</fieldset>
 
 	</div>

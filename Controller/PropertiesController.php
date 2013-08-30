@@ -126,7 +126,7 @@ class PropertiesController extends PropertiesAppController {
  * Add a property
  * 
  */
-    protected function add() {
+    public function add() {
     	if (!empty($this->request->data)) {
 			if ($this->Property->saveAll($this->request->data)) {
 				$this->Session->setFlash(__('Property saved.'));
@@ -139,7 +139,6 @@ class PropertiesController extends PropertiesAppController {
 		$this->set('page_title_for_layout', __('Create a Property'));
 		$this->set('title_for_layout', __('Add Property Form'));
         $this->layout = 'default';
-        $this->view = 'add_property';
     }
 
     

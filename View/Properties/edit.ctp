@@ -1,5 +1,5 @@
 <div class="row-fluid">
-	<div class="pull-left span4 bs-docs-sidebar" id="property nav">
+	<div class="pull-left span4 bs-docs-sidebar" id="propertyNav">
 	    <ul class="nav-list bs-docs-sidenav">
 	        <li><a class="tab-trigger" data-target="#propertyDetails"><i class="icon-chevron-right"></i> Property Information</a></li>
 	        <li><a class="tab-trigger" data-target="#optionalDetails"><i class="icon-chevron-right"></i> Optional Details</a></li>
@@ -33,9 +33,8 @@
 	    </fieldset>
 	    <fieldset id="propertyImages">
 	        <legend class="toggleClick"><?php echo __d('properties', 'Property images'); ?></legend>
-	        <?php
-	        echo $this->Html->link('Edit Images', array('admin' => 1, 'plugin' => 'galleries', 'controller' => 'galleries', 'action' => 'edit', 'Property', $this->request->data['Property']['id']));    
-	        echo $this->Element('gallery', array('model' => 'Property', 'foreignKey' => $this->request->data['Property']['id']), array('plugin' => 'galleries')); ?>
+	        <?php echo $this->Html->link('Edit Images', array('admin' => 1, 'plugin' => 'galleries', 'controller' => 'galleries', 'action' => 'edit', 'Property', $this->request->data['Property']['id'])); ?>
+	        <?php echo $this->Element('gallery', array('model' => 'Property', 'foreignKey' => $this->request->data['Property']['id']), array('plugin' => 'galleries')); ?>
 	        </fieldset>
 	    
 	    <?php if (empty($this->request->data['Property']['parent_id']) && in_array('Categories', CakePlugin::loaded())) : ?>
@@ -43,10 +42,9 @@
 	 		<legend class="toggleClick"><?php echo __d('properties', 'Property categories');?></legend>
 			<?php echo $this->Form->input('Category', array('multiple' => 'checkbox', 'selected' => $selectedCategories, 'label' => __('Choose categories (%s)', $this->Html->link('manage categories', array('admin' => 1, 'plugin' => 'properties', 'controller' => 'properties', 'action' => 'categories'))))); ?>
 		</fieldset>
-	    <?php
-endif
-	    echo $this->Form->submit('Save & Continue', array('name' => 'SaveAndContinue', 'class' => 'btn pull-right'));
-	    echo $this->Form->end('Save'); ?>
+	    <?php endif;?>
+	    <?php echo $this->Form->submit('Save & Continue', array('name' => 'SaveAndContinue', 'class' => 'btn pull-right')); ?>
+	    <?php echo $this->Form->end('Save'); ?>
 	</div>
 </div>
 
