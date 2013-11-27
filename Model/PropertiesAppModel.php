@@ -21,5 +21,30 @@ App::uses('AppModel', 'Model');
  */
 
 class PropertiesAppModel extends AppModel {
+	
+/**
+ * Menu Init method
+ * Used by WebpageMenuItem to initialize when someone creates a new menu item for the users plugin.
+ * 
+ */
+ 	public function menuInit($data = null) {
+ 		App::uses('Property', 'Properties.Model');
+		$Property = new Property;
+		$property = $Property->find('first');
+		if (!empty($property)) {
+	 		// link to properties index and first property
+			$data['WebpageMenuItem']['item_url'] = '/properties/properties/index';
+			$data['WebpageMenuItem']['item_text'] = 'Property List';
+			$data['WebpageMenuItem']['name'] = 'Property List';
+			$data['ChildMenuItem'] = array(
+				array(
+					'name' => $property['Property']['name'],
+					'item_text' => $property['Property']['name'],
+					'item_url' => '/properties/properties/view/'.$property['Property']['id']
+				)
+			);
+		}
+ 		return $data;
+ 	}
 
 }
