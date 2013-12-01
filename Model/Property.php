@@ -28,20 +28,6 @@ class Property extends PropertiesAppModel {
 		'price' => array('notempty'),
         );
 
-	public $order = '';
-
-	public $hasOne = array(
-		'Gallery' => array(
-			'className' => 'Galleries.Gallery',
-			'foreignKey' => 'foreign_key',
-			'dependent' => true,
-			'conditions' => array('Gallery.model' => 'Property'),
-			'fields' => '',
-			'order' => ''
-            )
-        );
-
-	//properties association.
 	public $belongsTo = array(
 		'Owner' => array(
 			'className' => 'Users.User',
@@ -52,8 +38,15 @@ class Property extends PropertiesAppModel {
             ),
         );
     
-	public function __construct($id = null, $table = null, $ds = null) {		
-		if (in_array('Categories', CakePlugin::loaded())) {
+/**
+ * Constructor
+ * 
+ */
+	public function __construct($id = null, $table = null, $ds = null) {
+		if(CakePlugin::loaded('Media')) {
+			$this->actsAs[] = 'Media.MediaAttachable';
+		}	
+		if (CakePlugin::loaded('Categories')) {
 			$this->hasAndBelongsToMany['Category'] = array(
 	            'className' => 'Categories.Category',
 	       		'joinTable' => 'categorized',
@@ -64,41 +57,15 @@ class Property extends PropertiesAppModel {
 	            );
 			$this->actsAs['Categories.Categorizable'] = array('modelAlias' => 'Property');
 		}
-		if (in_array('Maps', CakePlugin::loaded())) {
+		if (CakePlugin::loaded('Maps')) {
 			// address field is in use in canopy, make sure it works there if changing the field name
 			/** @see MapableBehavior::beforeSave() **/
 			$this->actsAs['Maps.Mapable'] = array('modelAlias' => 'Property', 'addressField' => 'location');
 		}
-		
 		parent::__construct($id, $table, $ds); // this order is imortant
 		
 		$this->categorizedParams = array('conditions' => array($this->alias.'.parent_id' => null));
 		$this->order = array($this->alias . '.' . 'price');
 	}
-    
-/**
- * Before save callback
- * 
- * @param type $options
- * @return boolean
- */
-    public function beforeSave($options = array()) {
-        $this->Behaviors->attach('Galleries.Mediable'); // attaching the gallery behavior here, because that's how it was in Products
-		$this->data = $this->_cleanAddData($this->data);
-        return parent::beforeSave($options);
-    }
 
-/**
- * Cleans data for saving
- *
- * @access protected
- * @param array
- * @return array
- */
- 	protected function _cleanAddData($data) {
-        if (empty($data['GalleryImage']['filename']['name'])) {
-            unset($data['GalleryImage']);
-        }
-		return $data;
-	}	
 }

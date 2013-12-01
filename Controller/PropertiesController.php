@@ -64,12 +64,8 @@ class PropertiesController extends PropertiesAppController {
  * @return void
  */
 	public function index() {		
-		$this->set('properties', $properties = $this->paginate());
-		$this->set('displayName', 'name');
-		$this->set('displayDescription', 'summary'); 
-		$this->set('showGallery', true);
-		$this->set('galleryForeignKey', 'id');
-		return $properties;
+		$this->set('properties', $this->request->data = $this->paginate());
+		return $this->request->data;
 	}
 
 /**
@@ -113,13 +109,13 @@ class PropertiesController extends PropertiesAppController {
 				)
 			));
 			
-		$this->set('property', $property = $this->Property->find('first' , array(
+		$this->set('property', $this->request->data = $this->Property->find('first' , array(
 			'conditions' => array(
 				'Property.id' => $id
 				)
 			)));
-        $this->set('title_for_layout', $property['Property']['name']);
-        return $property;
+        $this->set('title_for_layout', $this->request->data['Property']['name']);
+        return $this->request->data;
 	}   
 
 /**
@@ -168,20 +164,20 @@ class PropertiesController extends PropertiesAppController {
 	        $this->request->data = $this->Property->find('first', array(
 	            'conditions' => array(
 	                'Property.id' => $id
-	                ),
-	            'contain' => array(
-	                'Gallery',
-	            )));
+	                )
+				));
 		}
-        $this->set('categories', $this->Property->Category->generateTreeList());
-		$selectedCategories = $this->Property->Category->Categorized->find('all', array(
-			'conditions' => array(
-				'Categorized.model'=>$this->Property->alias,
-				'Categorized.foreign_key'=>$this->Property->id
-				),
-			'contain' => array('Category')
-			));
-		$this->set('selectedCategories',  Set::extract($selectedCategories, '/Category/id'));
+		if (CakePlugin::loaded('Categories')) {
+	        $this->set('categories', $this->Property->Category->generateTreeList());
+			$selectedCategories = $this->Property->Category->Categorized->find('all', array(
+				'conditions' => array(
+					'Categorized.model'=>$this->Property->alias,
+					'Categorized.foreign_key'=>$this->Property->id
+					),
+				'contain' => array('Category')
+				));
+			$this->set('selectedCategories',  Set::extract($selectedCategories, '/Category/id'));
+		}
        	$this->set('page_title_for_layout', __('Edit %s ', $this->request->data['Property']['name']));
 		$this->set('title_for_layout', __('Edit %s ', $this->request->data['Property']['name']));
         $this->layout = 'default';
