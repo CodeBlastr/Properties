@@ -1,5 +1,5 @@
 
-<?php echo $this->Media->watermark('default', array('data' => $property, 'width' => '100%', 'alt' => $property['Property']['name'])); ?>
+<?php echo $this->Media->phpthumb($property['Media'][0], array('w' => '300', 'h' => '100', 'fltr' => 'wmt|water|2|BR|ffffff||50')); ?>
 		
 <div class="property view row">
 	<div class="col-md-8">
@@ -52,4 +52,4 @@ $this->set('context_menu', array('menus' => array(
 			$this->Html->link(__d('properties', 'Delete'), array('action' => 'delete', $property['Property']['id']), null, sprintf(__('Are you sure you want to delete # %s?', true), $property['Property']['id'])),
 			),
 		),
-	))); ?>
+	)));
