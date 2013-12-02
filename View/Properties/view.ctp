@@ -1,6 +1,9 @@
+
+<?php echo $this->Media->watermark('default', array('data' => $property, 'width' => '100%', 'alt' => $property['Property']['name'])); ?>
+		
 <div class="property view row">
 	<div class="col-md-8">
-		<?php echo $this->Media->carousel('default', array('data' => $property, 'width' => '100%', 'alt' => $auction['Auction']['name'])); ?>
+		<?php echo $this->Media->carousel('default', array('data' => $property, 'width' => '100%', 'alt' => $property['Property']['name'])); ?>
 	</div>
 	<div class="col-md-4">
 		<h2><?php echo $property['Property']['name']; ?></h2>
