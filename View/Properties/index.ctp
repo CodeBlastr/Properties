@@ -33,7 +33,7 @@ $this->set('forms_sort', array(
     )),
 ));
 // set contextual search options
-$this->set('forms_search', array(
+$this->set('formsSearch', array(
     'url' => '/properties/properties/index/', 
 	'inputs' => array(
 		array(

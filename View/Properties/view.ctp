@@ -1,6 +1,3 @@
-
-<?php echo $this->Media->phpthumb($property['Media'][0], array('w' => '300', 'h' => '100', 'fltr' => 'wmt|water|2|BR|ffffff||50')); ?>
-		
 <div class="property view row">
 	<div class="col-md-8">
 		<?php echo $this->Media->carousel('default', array('data' => $property, 'width' => '100%', 'alt' => $property['Property']['name'])); ?>
@@ -23,11 +20,11 @@
 
 <?php
 // set contextual search options
-$this->set('forms_search', array(
+$this->set('formsSearch', array(
     'url' => '/properties/properties/index/', 
 	'inputs' => array(
 		array(
-			'name' => 'contains:name', 
+			'name' => 'contains:search_tags', 
 			'options' => array(
 				'label' => '', 
 				'placeholder' => 'Property Search',

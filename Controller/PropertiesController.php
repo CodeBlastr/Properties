@@ -146,6 +146,7 @@ class PropertiesController extends PropertiesAppController {
  * @throws NotFoundException
  */
 	public function edit($id = null) {
+		$this->redirect('admin');
 		$this->Property->id = $id;
 		if (!$this->Property->exists()) {
 			throw new NotFoundException(__('Invalid property'));
@@ -180,7 +181,6 @@ class PropertiesController extends PropertiesAppController {
 		}
        	$this->set('page_title_for_layout', __('Edit %s ', $this->request->data['Property']['name']));
 		$this->set('title_for_layout', __('Edit %s ', $this->request->data['Property']['name']));
-        $this->layout = 'default';
 	}
 
 /**
