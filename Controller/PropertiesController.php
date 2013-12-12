@@ -42,18 +42,8 @@ class PropertiesController extends PropertiesAppController {
  *
  */
 	public function dashboard(){
-        $Transaction = ClassRegistry::init('Transactions.Transaction');
-        $TransactionItem = ClassRegistry::init('Transactions.TransactionItem');
-        $this->set('counts', $counts = array_count_values(Set::extract('/Transaction/status', $Transaction->find('all'))));
-		$this->set('statsSalesToday', $Transaction->salesStats('today'));
-		$this->set('statsSalesThisWeek', $Transaction->salesStats('thisWeek'));
-		$this->set('statsSalesThisMonth', $Transaction->salesStats('thisMonth'));
-		$this->set('statsSalesThisYear', $Transaction->salesStats('thisYear'));
-		$this->set('statsSalesAllTime', $Transaction->salesStats('allTime'));
-		$this->set('transactionStatuses', $Transaction->statuses());
-		$this->set('itemStatuses', $TransactionItem->statuses());
-		$this->set('title_for_layout', __('Ecommerce Dashboard'));
-		$this->set('page_title_for_layout', __('Ecommerce Dashboard'));
+		$this->set('properties', $this->request->data = $this->paginate());
+		return $this->request->data;
         $this->layout = 'default';
 	}
 
@@ -116,7 +106,24 @@ class PropertiesController extends PropertiesAppController {
 			)));
         $this->set('title_for_layout', $this->request->data['Property']['name']);
         return $this->request->data;
-	}   
+	}
+	
+	/**
+	 * Featured method
+	 *
+	 */
+	public function featured() {
+		$this->request->data = $this->Property->find('all' , array(
+				'conditions' => array(
+						'Property.is_featured' => true
+				),
+				'contain' => array('Media'),
+		));
+			
+		$this->set('title_for_layout', $this->request->data['Property']['name']);
+		return $this->request->data;
+	}
+	
 
 /**
  * Add a property
