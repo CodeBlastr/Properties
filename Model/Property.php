@@ -45,7 +45,7 @@ class Property extends PropertiesAppModel {
 	public function __construct($id = null, $table = null, $ds = null) {
 		if(CakePlugin::loaded('Media')) {
 			$this->actsAs[] = 'Media.MediaAttachable';
-		}	
+		}
 		if (CakePlugin::loaded('Categories')) {
 			$this->hasAndBelongsToMany['Category'] = array(
 	            'className' => 'Categories.Category',
