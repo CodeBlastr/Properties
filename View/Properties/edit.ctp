@@ -9,7 +9,7 @@
 	</div>
 	
 	<div class="property add form pull-right span8 col-md-8" data-spy="scroll" data-target="#propertyNav">
-		<?php echo $this->Form->create('Property', array('type' => 'file')); ?>
+		<?php echo $this->Form->create('Property'); ?>
 	    <fieldset id="property details">
 	        <legend class="sectionTitle"><?php echo __d('properties', 'Property Information'); ?></legend>
 	    	<?php echo $this->Form->input('Property.id'); ?>
@@ -39,7 +39,7 @@
 	    <?php if (empty($this->request->data['Property']['parent_id']) && CakePlugin::loaded('Categories')) : ?>
 		<fieldset id="propertyCategorization">
 	 		<legend class="toggleClick"><?php echo __d('properties', 'Property categories');?></legend>
-			<?php echo $this->Form->input('Category', array('multiple' => 'checkbox', 'selected' => $selectedCategories, 'label' => __('Choose categories (%s)', $this->Html->link('manage categories', array('admin' => 1, 'plugin' => 'properties', 'controller' => 'properties', 'action' => 'categories'))))); ?>
+			<?php echo $this->Form->input('Category', array('escape' => false, 'multiple' => 'checkbox', 'selected' => $selectedCategories, 'label' => __('Choose categories (%s)', $this->Html->link('manage categories', array('admin' => 1, 'plugin' => 'properties', 'controller' => 'properties', 'action' => 'categories'))))); ?>
 		</fieldset>
 	    <?php endif;?>
 	    <?php echo $this->Form->submit('Save & Continue', array('name' => 'SaveAndContinue', 'class' => 'btn pull-right')); ?>
