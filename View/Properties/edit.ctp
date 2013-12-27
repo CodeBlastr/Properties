@@ -8,7 +8,7 @@
 	    </ul>
 	</div>
 	
-	<div class="property add form pull-right span8 col-md-8" data-spy="scroll" data-target="#propertyNav">
+	<div class="property add form pull-right span8 col-md-8">
 		<?php echo $this->Form->create('Property'); ?>
 	    <fieldset id="property details">
 	        <legend class="sectionTitle"><?php echo __d('properties', 'Property Information'); ?></legend>
@@ -45,6 +45,7 @@
 	    <?php echo $this->Form->submit('Save & Continue', array('name' => 'SaveAndContinue', 'class' => 'btn pull-right')); ?>
 	    <?php echo $this->Form->end('Save'); ?>
 	</div>
+	
 </div>
 
 <script type="text/javascript">
