@@ -60,7 +60,7 @@ class Property extends PropertiesAppModel {
 		if (CakePlugin::loaded('Maps')) {
 			// address field is in use in canopy, make sure it works there if changing the field name
 			/** @see MapableBehavior::beforeSave() **/
-			$this->actsAs['Maps.Mapable'] = array('modelAlias' => 'Property', 'addressField' => 'location');
+			$this->actsAs['Maps.Mapable'] = array('modelAlias' => 'Property', 'addressField' => 'location', 'searchTagsField' => 'search_tags');
 		}
 		parent::__construct($id, $table, $ds); // this order is imortant
 		

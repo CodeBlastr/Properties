@@ -53,7 +53,8 @@ class PropertiesController extends PropertiesAppController {
  * @param void
  * @return void
  */
-	public function index() {		
+	public function index() {
+		
 		$this->set('properties', $this->request->data = $this->paginate());
 		return $this->request->data;
 	}
@@ -165,7 +166,7 @@ class PropertiesController extends PropertiesAppController {
 				if (isset($this->request->data['SaveAndContinue'])) {
 					$this->redirect(array('action' => 'edit', $this->Property->id));
 				} else {
-					$this->redirect(array('action' => 'view', $this->Property->id));
+					$this->redirect(array('action' => 'view', $this->Property->id, 'admin' => false));
 				}
             }
 		} else {
