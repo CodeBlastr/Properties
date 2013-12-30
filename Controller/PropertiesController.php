@@ -20,7 +20,7 @@ App::uses('PropertiesAppController', 'Properties.Controller');
  * @since         Zuha(tm) v 0.0.1
  * @license       GPL v3 License (http://www.gnu.org/licenses/gpl.html) and Future Versions
  */
-class PropertiesController extends PropertiesAppController {
+class AppPropertiesController extends PropertiesAppController {
 
 /**
  * Name
@@ -35,6 +35,8 @@ class PropertiesController extends PropertiesAppController {
  * @var string
  */
 	public $uses = 'Properties.Property';
+	
+	public $components = array('Paginator');
 	
 
 /**
@@ -54,8 +56,24 @@ class PropertiesController extends PropertiesAppController {
  * @return void
  */
 	public function index() {
+		if(isset($this->request->query['search']) && !empty($this->request->query['search'])) {
+			$query = $this->request->query['search'];
+			$this->Paginator->settings = array(
+				'conditions' => array(
+					'OR' => array(
+						'Property.search_tags LIKE' => "%$query%",
+						'Property.location LIKE' => "%$query%",
+						'Property.name LIKE' => "%$query%",
+						'Property.description LIKE' => "%$query%",		
+					)
+			));
+		}elseif(isset($this->request->query['advanced']) && !empty($this->request->query['advanced'])) {
+			$conditions = array();
+			
+		}
 		
-		$this->set('properties', $this->request->data = $this->paginate());
+		$this->set('properties', $this->request->data = $this->Paginator->paginate('Property'));
+		
 		return $this->request->data;
 	}
 
@@ -221,4 +239,45 @@ class PropertiesController extends PropertiesAppController {
         $this->set('page_title_for_layout', __('Property Categories'));
 		$this->layout = 'default';
     }
+    
+    /**
+     * Advanced Search Page
+     * 
+     */
+    
+    public function advanced_search() {
+    	$acre_options = array(
+    		'0_1' => 'Less than 1',
+    		'1_2' => '1 to 2',
+    		'3_5' => '3 to 5',
+    		'5_10' => '5 to 10',
+    		'10_+' => 'More than 10'
+    	);
+    	$bedroom_options = array(
+    			'1_2' => '1 to 2',
+    			'2_3' => '2 to 3',
+    			'3_4' => '4 to 5',
+    			'5_+' => 'More than 5'
+    	);
+    	$bathroom_options = array(
+    			'1_2' => '1 to 2',
+    			'2_3' => '2 to 3',
+    			'3_+' => 'More than 4'
+    	);
+    	$footage_options = array(
+    			'0_1000' => 'Less than 1000',
+    			'1001_2000' => '1000 to 2000',
+    			'2001_3000' => '2001 to 3000',
+    			'3001_4000' => '3001 to 4000',
+    			'4001_5000' => '4001 to 5000',
+    			'5000_+' => '5000+',
+    	);
+    	$this->set(compact('acre_options', 'bedroom_options', 'bathroom_options', 'footage_options'));
+    }
+}
+
+if (!isset($refuseInit)) {
+	class PropertiesController extends AppPropertiesController {
+	}
+
 }
