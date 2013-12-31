@@ -69,7 +69,87 @@ class AppPropertiesController extends PropertiesAppController {
 			));
 		}elseif(isset($this->request->query['advanced']) && !empty($this->request->query['advanced'])) {
 			$conditions = array();
-			
+			$queries = $this->request->query;
+			foreach ($queries as $param => $query) {
+				if(!empty($query)) {
+					if(strpos($param, 'category') !== false) {
+						$this->loadModel('Categories.Categorized');
+						$categories = $this->Categorized->find('all', array('conditions' => array('Categorized.category_id' => $query, 'Categorized.model' > 'Property')));
+						if(!empty($categories)) {
+							if(isset($conditions['Property.id'])) {
+								$conditions['Property.id'] += Hash::extract($categories, '{n}.Categorized.foreign_key');
+							}else {
+								$conditions['Property.id'] = Hash::extract($categories, '{n}.Categorized.foreign_key');
+							}
+						}
+					}else {
+						switch ($param) {
+							case 'name':
+								$conditions['Property.name LIKE'] = "%$query%";
+								break;
+							case 'descritpion':
+								$conditions['Property.description LIKE'] = "%$query%";
+								break;
+							case 'price_min':
+								if(!empty($queries['price_max'])) {
+									$conditions['Property.price BETWEEN ? AND ?'] = array($queries['price_min'], $queries['price_max']);
+								}else {
+									$conditions['Property.price >'] = "%$query%";
+								}
+								break;
+							case 'price_max':
+								if(empty($queries['price_min'])) {
+									$conditions['Property.price <'] = "%$query%";
+								}
+								break;
+							case 'bedrooms':
+								foreach ($query as $q) {
+									$range = explode('_', $q);
+									if($range[1] == '+') {
+										$conditions['Property.bedrooms >'] = $range[0];
+									}else {
+										$conditions['Property.bedrooms BETWEEN ? AND ?'] = $range;
+									}
+								}
+								break;
+							case 'bathrooms':
+								foreach ($query as $q) {
+									$range = explode('_', $q);
+									if($range[1] == '+') {
+										$conditions['Property.bathrooms >'] = $range[0];
+									}else {
+										$conditions['Property.bathrooms BETWEEN ? AND ?'] = $range;
+									}
+								}
+								break;
+							case 'footage':
+								foreach ($query as $q) {
+									$range = explode('_', $q);
+									if($range[1] == '+') {
+										$conditions['Property.footage >'] = $range[0];
+									}else {
+										$conditions['Property.footage BETWEEN ? AND ?'] = $range;
+									}
+								}
+								break;
+							case 'acres':
+								foreach ($query as $q) {
+									$range = explode('_', $q);
+									if($range[1] == '+') {
+										$conditions['Property.acres >'] = $range[0];
+									}else {
+										$conditions['Property.acres BETWEEN ? AND ?'] = $range;
+									}
+								}
+								break;
+						}
+					}
+				}
+			}
+			$this->Paginator->settings = array(
+				'conditions' => array(
+					'OR' => $conditions,
+			));
 		}
 		
 		$this->set('properties', $this->request->data = $this->Paginator->paginate('Property'));
@@ -272,6 +352,17 @@ class AppPropertiesController extends PropertiesAppController {
     			'4001_5000' => '4001 to 5000',
     			'5000_+' => '5000+',
     	);
+    	if(CakePlugin::loaded('Categories')) {
+    		$catlist = array();
+    		$categories = $this->Property->Category->find('threaded', array('conditions' => array('Category.model' => 'Property')));
+    		foreach ($categories as $parent) {
+    			$catlist[$parent['Category']['name']] = array();
+    			foreach ($parent['children'] as $child) {
+    				$catlist[$parent['Category']['name']][$child['Category']['id']] = $child['Category']['name'];
+    			}
+    		}
+    		$this->set('categories', $catlist);
+    	}
     	$this->set(compact('acre_options', 'bedroom_options', 'bathroom_options', 'footage_options'));
     }
 }
