@@ -70,18 +70,19 @@ class AppPropertiesController extends PropertiesAppController {
 		}elseif(isset($this->request->query['advanced']) && !empty($this->request->query['advanced'])) {
 			$conditions = array();
 			$queries = $this->request->query;
+			$regionids = false;
+			$featureids = false;
+			$propertyids = false;
+			$categoryids = false;
 			foreach ($queries as $param => $query) {
 				if(!empty($query)) {
+					//For single Category
 					if(strpos($param, 'category') !== false) {
-						$this->loadModel('Categories.Categorized');
-						$categories = $this->Categorized->find('all', array('conditions' => array('Categorized.category_id' => $query, 'Categorized.model' > 'Property')));
-						if(!empty($categories)) {
-							if(isset($conditions['Property.id'])) {
-								$conditions['Property.id'] += Hash::extract($categories, '{n}.Categorized.foreign_key');
-							}else {
-								$conditions['Property.id'] = Hash::extract($categories, '{n}.Categorized.foreign_key');
-							}
-						}
+						$categoryids[] = $query;
+					}elseif(strpos($param, 'region') !== false) { //For Regions
+						$regionids[] = $query;
+					}elseif(strpos($param, 'feature') !== false) { //For Features
+						$featureids[] = $query;
 					}else {
 						switch ($param) {
 							case 'name':
@@ -146,14 +147,52 @@ class AppPropertiesController extends PropertiesAppController {
 					}
 				}
 			}
+			if($regionids || $featureids || $categoryids) {
+				$this->loadModel('Categories.Categorized');
+				$propertyids = array();
+			}
+			
+			if($categoryids) {
+				$categories = $this->Categorized->find('all', array('conditions' => array('Categorized.category_id' => $categoryids)));
+				if($propertyids) {
+					$propertyids += Hash::extract($categories, '{n}.Categorized.foreign_key');
+				}else {
+					$propertyids = Hash::extract($categories, '{n}.Categorized.foreign_key');
+				}
+			}
+			
+			if($regionids) {
+				$categories = $this->Categorized->find('all', array('conditions' => array('Categorized.category_id' => $regionids)));
+				if($propertyids) {
+					$propertyids += Hash::extract($categories, '{n}.Categorized.foreign_key');
+				}else {
+					$propertyids = Hash::extract($categories, '{n}.Categorized.foreign_key');
+				}
+			}
+			
+			if($featureids) {
+				if($regionids) {
+					$categories = $this->Categorized->find('all', array('conditions' => array('Categorized.category_id' => $featureids, 'Categorized.foreign_key' => $propertyids)));
+				}else {
+					$categories = $this->Categorized->find('all', array('conditions' => array('Categorized.category_id' => $featureids)));
+				}
+				$propertyids = Hash::extract($categories, '{n}.Categorized.foreign_key');
+			}
+			
+			if($regionids || $featureids || $categoryids) {
+				if(empty($propertyids)) {
+					$conditions['Property.id'] = '';
+				}else {
+					$conditions['Property.id'] = $propertyids;
+				}
+			}
+			
 			$this->Paginator->settings = array(
 				'conditions' => array(
 					'OR' => $conditions,
 			));
 		}
-		
 		$this->set('properties', $this->request->data = $this->Paginator->paginate('Property'));
-		
 		return $this->request->data;
 	}
 
