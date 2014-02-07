@@ -19,6 +19,8 @@ App::uses('PropertiesAppController', 'Properties.Controller');
  * @subpackage    zuha.app.plugins.properties
  * @since         Zuha(tm) v 0.0.1
  * @license       GPL v3 License (http://www.gnu.org/licenses/gpl.html) and Future Versions
+ *
+ * @property Property Property
  */
 class AppPropertiesController extends PropertiesAppController {
 
@@ -313,16 +315,19 @@ class AppPropertiesController extends PropertiesAppController {
 	                )
 				));
 		}
+
 		if (CakePlugin::loaded('Categories')) {
 	        $this->set('categories', $this->Property->Category->generateTreeList());
+
 			$selectedCategories = $this->Property->Category->Categorized->find('all', array(
 				'conditions' => array(
 					'Categorized.model'=>$this->Property->alias,
 					'Categorized.foreign_key'=>$this->Property->id
 					),
-				'contain' => array('Category')
+
 				));
-			$this->set('selectedCategories',  Set::extract($selectedCategories, '/Category/id'));
+			
+			$this->set('selectedCategories',  Set::extract($selectedCategories, '/Categorized/category_id'));
 		}
        	$this->set('page_title_for_layout', __('Edit %s ', $this->request->data['Property']['name']));
 		$this->set('title_for_layout', __('Edit %s ', $this->request->data['Property']['name']));
@@ -339,7 +344,7 @@ class AppPropertiesController extends PropertiesAppController {
 			throw new NotFoundException(__('Invalid property'));
 		}
 		debug('this needs to be post only, fix');
-		break;
+		exit;
 	}
     
 /**
