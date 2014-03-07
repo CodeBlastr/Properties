@@ -335,16 +335,24 @@ class AppPropertiesController extends PropertiesAppController {
 
 /**
  * Delete method
- * 
+ * @todo this needs to be POST only
+ *
  * @param string $id
  */
 	public function delete($id = null) {
+		if (!$this->request->is('post')) {
+			throw new MethodNotAllowedException();
+		}
 		$this->Property->id = $id;
 		if (!$this->Property->exists()) {
 			throw new NotFoundException(__('Invalid property'));
 		}
-		debug('this needs to be post only, fix');
-		exit;
+		if ($this->Property->delete()) {
+			$this->Session->setFlash(__('Deleted'), 'flash_success');
+			$this->redirect(array('action' => 'index'));
+		}
+		$this->Session->setFlash(__('Error deleting, please try again.'), 'flash_warning');
+		$this->redirect(array('action' => 'index'));
 	}
     
 /**
