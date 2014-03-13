@@ -378,6 +378,7 @@ class AppPropertiesController extends PropertiesAppController {
      */
     
     public function advanced_search() {
+		$this->set('page_title_for_layout', __('Advanced Search'));
     	$acre_options = array(
     		'0_1' => 'Less than 1',
     		'1_2' => '1 to 2',
