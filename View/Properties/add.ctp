@@ -23,7 +23,9 @@
 		<?php echo $this->Form->create('Property', array('type' => 'file')); ?>
 	    <fieldset>
 	    	<?php echo $this->Form->input('Property.name', array('label' => 'Property Name')); ?>
-	        <?php echo $this->Form->input('Property.price', array('label' => 'Price <small><em>(ex. 100000.00)</em></small>', 'type' => 'number', 'step' => '0.01', 'min' => '0', 'max' => '99999999999')); ?>
+			<?php echo $this->Form->input('Property.price', array('label' => 'Set Price <small><em>(ex. 0000.00)</em></small>', 'step' => '0.01', 'min' => '0', 'max' => '99999999999', 'escape' => false)); ?>
+			<?php echo $this->Form->input('Property.price_min', array('label' => 'Minimum Price <small><em>(ex. 0000.00)</em></small>', 'step' => '0.01', 'min' => '0', 'max' => '99999999999', 'escape' => false)); ?>
+			<?php echo $this->Form->input('Property.price_max', array('label' => 'Maximum Price <small><em>(ex. 0000.00)</em></small>', 'step' => '0.01', 'min' => '0', 'max' => '99999999999', 'escape' => false)); ?>
 			<?php echo $this->Form->input('Property.description', array('type' => 'richtext', 'label' => 'Property Description')); ?>
 			<?php echo $this->Form->input('Property.location'); ?>
 			<?php echo $this->Form->input('Property.bedrooms'); ?>

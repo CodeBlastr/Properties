@@ -259,7 +259,7 @@ class AppPropertiesController extends PropertiesAppController {
 				),
 				'contain' => array('Media'),
 		));
-			
+		
 		$this->set('title_for_layout', $this->request->data['Property']['name']);
 		return $this->request->data;
 	}
@@ -340,9 +340,9 @@ class AppPropertiesController extends PropertiesAppController {
  * @param string $id
  */
 	public function delete($id = null) {
-		if (!$this->request->is('post')) {
-			throw new MethodNotAllowedException();
-		}
+		// if (!$this->request->is('post')) {
+			// throw new MethodNotAllowedException();
+		// }
 		$this->Property->id = $id;
 		if (!$this->Property->exists()) {
 			throw new NotFoundException(__('Invalid property'));

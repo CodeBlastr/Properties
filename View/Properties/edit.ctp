@@ -14,7 +14,9 @@
 	        <legend class="sectionTitle"><?php echo __d('properties', 'Property Information'); ?></legend>
 	    	<?php echo $this->Form->input('Property.id'); ?>
 			<?php echo $this->Form->input('Property.name', array('label' => 'Display Name')); ?>
-			<?php echo $this->Form->input('Property.price', array('label' => 'Retail Price <small><em>(ex. 0000.00)</em></small>', 'step' => '0.01', 'min' => '0', 'max' => '99999999999', 'escape' => false)); ?>
+			<?php echo $this->Form->input('Property.price', array('label' => 'Set Price <small><em>(ex. 0000.00)</em></small>', 'step' => '0.01', 'min' => '0', 'max' => '99999999999', 'escape' => false)); ?>
+			<?php echo $this->Form->input('Property.price_min', array('label' => 'Minimum Price <small><em>(ex. 0000.00)</em></small>', 'step' => '0.01', 'min' => '0', 'max' => '99999999999', 'escape' => false)); ?>
+			<?php echo $this->Form->input('Property.price_max', array('label' => 'Maximum Price <small><em>(ex. 0000.00)</em></small>', 'step' => '0.01', 'min' => '0', 'max' => '99999999999', 'escape' => false)); ?>
 			<?php echo $this->Form->input('Property.description', array('type' => 'richtext', 'label' => 'What is the sales copy for this item?')); ?>
 			<?php echo $this->Form->input('Property.location'); ?>
 			<?php echo $this->Form->input('Property.bedrooms'); ?>
