@@ -38,8 +38,6 @@ class AppPropertiesController extends PropertiesAppController {
  */
 	public $uses = 'Properties.Property';
 	
-	public $components = array('Paginator');
-	
 
 /**
  * Properties dashboard.
@@ -58,18 +56,15 @@ class AppPropertiesController extends PropertiesAppController {
  * @return void
  */
 	public function index() {
-		if(isset($this->request->query['search']) && !empty($this->request->query['search'])) {
+		if (isset($this->request->query['search']) && !empty($this->request->query['search'])) {
 			$query = $this->request->query['search'];
-			$this->Paginator->settings = array(
-				'conditions' => array(
-					'OR' => array(
-						'Property.search_tags LIKE' => "%$query%",
-						'Property.location LIKE' => "%$query%",
-						'Property.name LIKE' => "%$query%",
-						'Property.description LIKE' => "%$query%",		
-					)
-			));
-		}elseif(isset($this->request->query['advanced']) && !empty($this->request->query['advanced'])) {
+			$this->paginate['conditions']['OR'] = array(
+				'Property.search_tags LIKE' => "%$query%",
+				'Property.location LIKE' => "%$query%",
+				'Property.name LIKE' => "%$query%",
+				'Property.description LIKE' => "%$query%",		
+				);
+		} elseif (isset($this->request->query['advanced']) && !empty($this->request->query['advanced'])) {
 			$conditions = array();
 			$queries = $this->request->query;
 			$regionids = false;
@@ -158,7 +153,7 @@ class AppPropertiesController extends PropertiesAppController {
 				$categories = $this->Categorized->find('all', array('conditions' => array('Categorized.category_id' => $categoryids)));
 				if($propertyids) {
 					$propertyids += Hash::extract($categories, '{n}.Categorized.foreign_key');
-				}else {
+				} else {
 					$propertyids = Hash::extract($categories, '{n}.Categorized.foreign_key');
 				}
 			}
@@ -175,7 +170,7 @@ class AppPropertiesController extends PropertiesAppController {
 			if($featureids) {
 				if($regionids) {
 					$categories = $this->Categorized->find('all', array('conditions' => array('Categorized.category_id' => $featureids, 'Categorized.foreign_key' => $propertyids)));
-				}else {
+				} else {
 					$categories = $this->Categorized->find('all', array('conditions' => array('Categorized.category_id' => $featureids)));
 				}
 				$propertyids = Hash::extract($categories, '{n}.Categorized.foreign_key');
@@ -189,12 +184,10 @@ class AppPropertiesController extends PropertiesAppController {
 				}
 			}
 			
-			$this->Paginator->settings = array(
-				'conditions' => array(
-					'OR' => $conditions,
-			));
+			$this->paginate['conditions']['OR'] = $conditions;
 		}
-		$this->set('properties', $this->request->data = $this->Paginator->paginate('Property'));
+		$this->paginate['contain'][] = 'PropertyDeveloper';
+		$this->set('properties', $this->request->data = $this->paginate('Property'));
 		return $this->request->data;
 	}
 
@@ -232,13 +225,6 @@ class AppPropertiesController extends PropertiesAppController {
 		if (!$this->Property->exists()) {
 			throw new NotFoundException(__('Invalid Property'));
 		}
-              
-		$property = $this->Property->find('first' , array(
-			'conditions' => array(
-				'Property.id' => $id
-				)
-			));
-			
 		$this->set('property', $this->request->data = $this->Property->find('first' , array(
 			'conditions' => array(
 				'Property.id' => $id
@@ -277,13 +263,12 @@ class AppPropertiesController extends PropertiesAppController {
             } 
 		}
     	if (in_array('Categories', CakePlugin::loaded())) {
-        	$this->set('categories', $this->Property->Category->generateTreeList());
+        	$this->set('categories', $this->Property->Category->generateTreeList(array('model' => 'Property')));
 		}
+		$this->set('developers', $developers = $this->Property->PropertyDeveloper->find('list'));
 		$this->set('page_title_for_layout', __('Create a Property'));
 		$this->set('title_for_layout', __('Add Property Form'));
-        $this->layout = 'default';
     }
-
     
 /**
  * Edit method
@@ -293,13 +278,12 @@ class AppPropertiesController extends PropertiesAppController {
  * @throws NotFoundException
  */
 	public function edit($id = null) {
-		$this->redirect('admin');
 		$this->Property->id = $id;
 		if (!$this->Property->exists()) {
 			throw new NotFoundException(__('Invalid property'));
 		}
 		
-		if (!empty($this->request->data)) {
+		if ($this->request->is('put')) {
 			if ($this->Property->saveAll($this->request->data)) {
 				$this->Session->setFlash(__('Property saved.'));
 				if (isset($this->request->data['SaveAndContinue'])) {
@@ -317,18 +301,19 @@ class AppPropertiesController extends PropertiesAppController {
 		}
 
 		if (CakePlugin::loaded('Categories')) {
-	        $this->set('categories', $this->Property->Category->generateTreeList());
+	        $this->set('categories', $this->Property->Category->generateTreeList(array('model' => 'Property')));
 
 			$selectedCategories = $this->Property->Category->Categorized->find('all', array(
 				'conditions' => array(
-					'Categorized.model'=>$this->Property->alias,
-					'Categorized.foreign_key'=>$this->Property->id
+					'Categorized.model' => $this->Property->alias,
+					'Categorized.foreign_key' => $this->Property->id
 					),
 
 				));
 			
 			$this->set('selectedCategories',  Set::extract($selectedCategories, '/Categorized/category_id'));
 		}
+		$this->set('developers', $developers = $this->Property->PropertyDeveloper->find('list'));
        	$this->set('page_title_for_layout', __('Edit %s ', $this->request->data['Property']['name']));
 		$this->set('title_for_layout', __('Edit %s ', $this->request->data['Property']['name']));
 	}
