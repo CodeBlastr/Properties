@@ -28,15 +28,33 @@ class Property extends PropertiesAppModel {
 		'price' => array('notempty'),
         );
 
+ /**
+  * Acts as
+  * 
+  * @var array
+  */
+    public $actsAs = array(
+     	'Metable',
+		);
+
 	public $belongsTo = array(
 		'Owner' => array(
 			'className' => 'Users.User',
-			'foreignKey' => 'owner_id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
+			'foreignKey' => 'owner_id'
+            ),
+		'PropertyDeveloper' => array(
+			'className' => 'Properties.PropertyDeveloper',
+			'foreignKey' => 'developer_id'
             ),
         );
+
+	public $hasMany = array(
+		'Comparable' => array(
+			'className' => 'Properties.Property',
+			'foreignKey' => false,
+			'conditions' => array('Comparable.comparables LIKE CONCAT("%", {$__cakeID__$} ,"%")')
+			)
+		);
     
 /**
  * Constructor
