@@ -240,22 +240,21 @@ class AppPropertiesController extends PropertiesAppController {
 	 */
 	public function featured() {
 		$this->request->data = $this->Property->find('all' , array(
-				'conditions' => array(
-						'Property.is_featured' => true
+			'conditions' => array(
+				'Property.is_featured' => true
 				),
-				'contain' => array('Media'),
-		));
+			'contain' => array('Media'),
+			));
 		
 		$this->set('title_for_layout', $this->request->data['Property']['name']);
 		return $this->request->data;
 	}
-	
 
 /**
  * Add a property
  * 
  */
-    public function add() {
+    public function add($developerId = null, $type = null) {
     	if (!empty($this->request->data)) {
 			if ($this->Property->saveAll($this->request->data)) {
 				$this->Session->setFlash(__('Property saved.'));
@@ -283,7 +282,7 @@ class AppPropertiesController extends PropertiesAppController {
 			throw new NotFoundException(__('Invalid property'));
 		}
 		
-		if ($this->request->is('put')) {
+		if ($this->request->is('put') || $this->request->is('post')) {
 			if ($this->Property->saveAll($this->request->data)) {
 				$this->Session->setFlash(__('Property saved.'));
 				if (isset($this->request->data['SaveAndContinue'])) {
@@ -339,7 +338,32 @@ class AppPropertiesController extends PropertiesAppController {
 		$this->Session->setFlash(__('Error deleting, please try again.'), 'flash_warning');
 		$this->redirect(array('action' => 'index'));
 	}
-    
+
+/**
+ * Comparables method
+ */
+    public function comparables($propertyId = null) {
+		$this->Property->id = $propertyId;
+		if (!$this->Property->exists()) {
+			throw new NotFoundException(__('Invalid property'));
+		}
+		$this->set('property', $this->request->data = $this->Property->find('first' , array(
+			'conditions' => array(
+				'Property.id' => $propertyId
+				)
+			)));
+		$this->set('comparables', $comparables = $this->Property->find('all', array(
+			'conditions' => array(
+				'Property.is_comparable' => 1,
+				'Property.comparables LIKE' => '%' . $propertyId . '%'
+				)
+			)));
+		$maps = Set::extract('/Map', $comparables);
+		array_push($maps, array('Map' => $this->request->data['Map']));
+		$this->set(compact('maps'));
+				
+    }
+
 /**
  * Categories method
  * 
