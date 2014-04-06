@@ -71,4 +71,4 @@ $this->set('context_menu', array('menus' => array(
 			$this->Html->link(__('List'), array('controller' => 'properties', 'action' => 'index')),
 			)
 		),
-	))); ?>
+	)));

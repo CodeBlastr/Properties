@@ -22,6 +22,7 @@
 	<?php echo $this->Form->create('PropertyDeveloper', array('type' => 'file')); ?>
 	<fieldset>
     	<?php echo $this->Form->input('PropertyDeveloper.id'); ?>
+    	<?php echo $this->Form->input('PropertyDeveloper.owner_id', array('type' => 'hidden')); ?>
     	<?php echo $this->Form->input('PropertyDeveloper.name'); ?>
 		<?php echo $this->Form->input('PropertyDeveloper.description'); ?>
 	</fieldset>
