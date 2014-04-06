@@ -19,14 +19,32 @@ App::uses('PropertiesAppModel', 'Properties.Model');
  * @since         Zuha(tm) v 0.0.1
  * @license       GPL v3 License (http://www.gnu.org/licenses/gpl.html) and Future Versions
  */
-class Property extends PropertiesAppModel {
+class AppProperty extends PropertiesAppModel {
 
 	public $name = 'Property';
-
+		
 	public $validate = array(
-		'name' => array('notempty'),
-		'price' => array('notempty'),
-        );
+		'name' => array(
+			'name' => array(
+				'rule' => array('notempty'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'price' => array(
+			'price' => array(
+				'rule' => array('notempty'),
+				'message' => 'Pricing required',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		)
+	);
 
  /**
   * Acts as
@@ -84,6 +102,12 @@ class Property extends PropertiesAppModel {
 		
 		$this->categorizedParams = array('conditions' => array($this->alias.'.parent_id' => null));
 		$this->order = array($this->alias . '.' . 'price');
+	}
+
+}
+
+if (!isset($refuseInit)) {
+	class Property extends AppProperty {
 	}
 
 }
