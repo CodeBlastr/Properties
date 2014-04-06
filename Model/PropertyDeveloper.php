@@ -62,4 +62,25 @@ class PropertyDeveloper extends PropertiesAppModel {
 		parent::__construct($id, $table, $ds); // this order is imortant
 	}
 
+/**
+ * Before save callback
+ * 
+ */
+	public function beforeSave($options = array()) {
+		$this->data = $this->_cleanData($this->data);
+		return parent::beforeSave($options);
+	}
+	
+/**
+ * Clean data
+ * 
+ * @param array
+ */
+ 	public function _cleanData($data) {
+ 		if (empty($data[$this->alias]['owner_id'])) {
+ 			$data[$this->alias]['owner_id'] = CakeSession::read('Auth.User.id');
+ 		}
+		return $data;
+ 	}
+
 }
