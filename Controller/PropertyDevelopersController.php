@@ -98,8 +98,7 @@ class AppPropertyDevelopersController extends PropertiesAppController {
 		if (!$this->PropertyDeveloper->exists()) {
 			throw new NotFoundException(__('Invalid developer'));
 		}
-		
-		if ($this->request->is('put')) {
+		if ($this->request->is('put') || $this->request->is('post')) {
 			if ($this->PropertyDeveloper->saveAll($this->request->data)) {
 				$this->Session->setFlash(__('Developer saved'));
 				if (isset($this->request->data['SaveAndContinue'])) {
@@ -138,6 +137,25 @@ class AppPropertyDevelopersController extends PropertiesAppController {
 		}
 		$this->Session->setFlash(__('Error deleting, please try again.'), 'flash_warning');
 		$this->redirect(array('action' => 'index'));
+	}
+
+/**
+ * My method
+ * 
+ */
+	public function my() {
+		if (empty($this->userId)) {
+			$this->redirect(array('action' => 'add'));
+		}
+		$this->set('propertyDeveloper', $this->request->data = $this->PropertyDeveloper->find('first' , array(
+			'conditions' => array(
+				'PropertyDeveloper.owner_id' => $this->userId
+				),
+			'contain' => array(
+				'Property'
+				)
+			)));
+        return $this->request->data;
 	}
 
 }
