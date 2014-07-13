@@ -74,13 +74,14 @@ class AppPropertyDevelopersController extends PropertiesAppController {
  * Add a property
  * 
  */
-    public function add() {
+    public function add($ownerId = null) {
     	if ($this->request->is('post')) {
 			if ($this->PropertyDeveloper->saveAll($this->request->data)) {
 				$this->Session->setFlash(__('Developer saved'));
 				$this->redirect(array('action' => 'view', $this->PropertyDeveloper->id));
             } 
 		}
+		$this->set('ownerId', !empty($ownerId) ? $ownerId : $this->Session->read('Auth.User.id')); 
 		$this->set('page_title_for_layout', __('Create a Property Developer'));
 		$this->set('title_for_layout', __('Create a Property Developer'));
     }
