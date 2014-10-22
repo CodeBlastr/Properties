@@ -6,13 +6,13 @@
   <table class="table table-striped">
 		<thead>
 			<tr>
-				<th>MLS Number</th>
-				<th>Name</th>
-				<th>Location</th>
-				<th>Summary</th>
-				<th>Price</th>
-				<th>Public</th>
-				<th>Started</th>
+				<th><?php echo $this->Paginator->sort('mls', 'MLS Number'); ?></th>
+				<th><?php echo $this->Paginator->sort('name', 'Name'); ?></th>
+				<th><?php echo $this->Paginator->sort('location', 'Location'); ?></th>
+				<th><?php echo $this->Paginator->sort('summary', 'Summary'); ?>Summary</th>
+				<th><?php echo $this->Paginator->sort('price', 'Price'); ?></th>
+				<th><?php echo $this->Paginator->sort('is_public', 'Public'); ?></th>
+				<th><?php echo $this->Paginator->sort('created', 'Created'); ?></th>
 				<th>Actions</th>
 			</tr>
 		</thead>
@@ -25,7 +25,7 @@
 					<td><?php echo $propery['Property']['summary']; ?></td>
 					<td><span class="label label-success"><?php echo $propery['Property']['price']; ?></span></td>
 					<td><?php echo $propery['Property']['is_public'] ? '<span class="glyphicon glyphicon-ok"></span>': ''; ?></td>
-					<td><?php echo $this->Time->format('M-D-Y', $propery['Property']['started']); ?></td>
+					<td><?php echo $this->Time->format('M d, Y', $propery['Property']['created']); ?></td>
 					<td>
 						<div class="btn-group">
 						<?php echo $this->Html->link('<span class="glyphicon glyphicon-eye-open"></span>', array('admin' => false, 'action' => 'view', $propery['Property']['id']), array('escape' => false)); ?>
